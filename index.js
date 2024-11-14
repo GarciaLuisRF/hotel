@@ -23,12 +23,12 @@ async function run() {
 
     //Se crea un documento a inertar para users con cada uno de sus campos excepto id, de eso se encarga la base de datos al momento
     const insertQuery = {
-      "user":"MildredHernandez",
-      "password":"Ragazza69",
-      "firstName":"Mildred",
-      "lastName":"Hernandez",
-      "position":"Employee",
-      "imageName":"frog.jpg"};
+      "user":"",
+      "password":"",
+      "firstName":"",
+      "lastName":"",
+      "position":"",
+      "imageName":""};
 
     //await necesario pára no tener problemas de sincronizacion
     //await insertDocument('users', insertQuery);
