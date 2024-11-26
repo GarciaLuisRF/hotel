@@ -1,7 +1,38 @@
-import { getDocuments, selectDocument, insertDocument, updateDocument } from "./modules/connectionManager.mjs";
-import { BSON } from "mongodb";
+var express = require("express");
+var app = express();
 
-async function run() {
+const { getDocuments, selectDocument, insertDocument, updateDocument } = require('./modules/connectionManager');
+const { BSON } = require('mongodb');
+
+
+app.get('/find/:collectionName/:query',async (req, res)=>{
+  const result = await selectDocument(req.params.collectionName, req.params.query);
+  res.send(result);
+});
+
+app.get('/find/:collectionName',async (req, res)=>{
+  const result = await getDocuments(req.params.collectionName);
+  res.send(result);
+});
+
+app.post('/insert/:collectionName/:query', async(req, res) =>{
+  const result = await insertDocument(req.params.collectionName, req.params.query);
+  res.send(result);
+});
+
+app.put('/update/:collectionName/:filterQuery/:updateQuery', async(req, res) =>{
+  const result = await updateDocument(req.params.collectionName, req.params.filterQuery, req.params.updateQuery);
+  res.send(result);
+});
+
+app.get('/:collection', (req, res)=>{
+  res.send("Aun escuchando " + req.params.collection);
+})
+
+app.listen(9292, ()=>{
+  console.log("Escuchando en el puerto 9292");
+})
+/*async function run() {
   
     //Requerido para biscar por Id, es la forma de crear un objeto de Id para que Mongo entienda
     const nid = new BSON.ObjectId("6722a6ccaab354ab12f660b1");
@@ -39,6 +70,4 @@ async function run() {
     users.forEach(user => {
       console.log(user);
     });
-}
-
-run().catch(console.dir);
+}*/
