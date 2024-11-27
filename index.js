@@ -22,13 +22,24 @@ const { BSON } = require('mongodb');
 
 app.post('/find/:collectionName',async (req, res)=>{
   const result = await selectDocument(req.params.collectionName, req.body);
-  console.log(result);
-  res.send(result);
+  if(result.length === 0){
+    res.status(404).send({
+      "code":"404"
+    });
+  }else{
+    res.send(result);
+  }
 });
 
 app.post('/findAll/:collectionName',async (req, res)=>{
   const result = await getDocuments(req.params.collectionName);
-  res.send(result);
+  if(result.length === 0){
+    res.status(404).send({
+      "code":"404"
+    });
+  }else{
+    res.send(result);
+  }
 });
 
 app.post('/insert/:collectionName', async(req, res) =>{
