@@ -1,32 +1,49 @@
 var express = require("express");
 var app = express();
 
+app.use((req, res, next)=>{
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+
+  // Request methods you wish to allow
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+  // Request headers you wish to allow
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  
+  next();
+});
+
+app.use(express.json());
+
+
 const { getDocuments, selectDocument, insertDocument, updateDocument } = require('./modules/connectionManager');
 const { BSON } = require('mongodb');
 
 
-app.get('/find/:collectionName/:query',async (req, res)=>{
-  const result = await selectDocument(req.params.collectionName, req.params.query);
+app.post('/find/:collectionName',async (req, res)=>{
+  const result = await selectDocument(req.params.collectionName, req.body);
+  console.log(result);
   res.send(result);
 });
 
-app.get('/find/:collectionName',async (req, res)=>{
+app.post('/findAll/:collectionName',async (req, res)=>{
   const result = await getDocuments(req.params.collectionName);
   res.send(result);
 });
 
-app.post('/insert/:collectionName/:query', async(req, res) =>{
-  const result = await insertDocument(req.params.collectionName, req.params.query);
+app.post('/insert/:collectionName', async(req, res) =>{
+  const result = await insertDocument(req.params.collectionName, req.body);
   res.send(result);
 });
 
-app.put('/update/:collectionName/:filterQuery/:updateQuery', async(req, res) =>{
-  const result = await updateDocument(req.params.collectionName, req.params.filterQuery, req.params.updateQuery);
+app.put('/update/:collectionName', async(req, res) =>{
+  const result = await updateDocument(req.params.collectionName, req.body["Query"][0], req.body["Query"][1]);
   res.send(result);
 });
 
-app.get('/:collection', (req, res)=>{
-  res.send("Aun escuchando " + req.params.collection);
+app.get('/', (req, res)=>{
+  console.log(req.body);
+  res.send("Recibido");
 })
 
 app.listen(9292, ()=>{

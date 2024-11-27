@@ -36,7 +36,12 @@ async function selectDocument(collectionName, filterQuery){
       await client.connect();
       const database = client.db('hotelManagment');
       const collection = database.collection(collectionName);
-      return await collection.findOne(filterQuery);
+      const lista = collection.find(filterQuery);
+      let arreglo = [];
+      for await(const lis of lista){
+        arreglo.push(lis);
+      }
+      return arreglo;
     }catch{
       console.log("No jalo el Select pa");
       return null
