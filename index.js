@@ -22,34 +22,46 @@ const { BSON } = require('mongodb');
 
 app.post('/find/:collectionName',async (req, res)=>{
   const result = await selectDocument(req.params.collectionName, req.body);
-  if(result.length === 0){
+  if(result.length === 0 || result === null){
     res.status(404).send({
       "code":"404"
     });
   }else{
-    res.send(result);
+    res.status(200).send(result);
   }
 });
 
 app.post('/findAll/:collectionName',async (req, res)=>{
   const result = await getDocuments(req.params.collectionName);
-  if(result.length === 0){
+  if(result.length === 0 || result === null){
     res.status(404).send({
       "code":"404"
     });
   }else{
-    res.send(result);
+    res.status(200).send(result);
   }
 });
 
 app.post('/insert/:collectionName', async(req, res) =>{
   const result = await insertDocument(req.params.collectionName, req.body);
-  res.send(result);
+  if(result === null){
+    res.status(400).send({
+      "code":"400"
+    });
+  }else{
+    res.status(201).send(result);
+  }
 });
 
 app.put('/update/:collectionName', async(req, res) =>{
   const result = await updateDocument(req.params.collectionName, req.body["Query"][0], req.body["Query"][1]);
-  res.send(result);
+  if(result === null){
+    res.status(400).send({
+      "code":"400"
+    });
+  }else{
+    res.status(201).send(result);
+  }
 });
 
 app.get('/', (req, res)=>{
